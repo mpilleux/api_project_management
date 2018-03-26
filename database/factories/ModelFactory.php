@@ -17,3 +17,14 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->email,
     ];
 });
+
+$factory->define(App\Project::class, function (Faker\Generator $faker) {
+    return [
+        'slug' => $faker->slug,
+        'name' => $faker->sentence(),
+        'active' => $faker->boolean(),
+        'created_by' => $faker->randomNumber(),
+        'updated_by' => null,
+        'deleted_by' => null
+    ];
+});

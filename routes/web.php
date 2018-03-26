@@ -14,3 +14,8 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+//Projects
+$router->get('projects', [
+    'as' => 'project.index', 'uses' => 'ProjectController@index'
+]);
