@@ -22,7 +22,7 @@ class CreateProjectsTable extends Migration
             // $table->timestamp('planned_end_date')->nullable();
             // $table->timestamp('actual_start_date')->nullable();
             // $table->timestamp('actual_end_date')->nullable();
-            $table->boolean('active');
+            $table->boolean('active')->default(1);
             $table->integer('created_by');
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();

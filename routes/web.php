@@ -19,3 +19,12 @@ $router->get('/', function () use ($router) {
 $router->get('projects', [
     'as' => 'project.index', 'uses' => 'ProjectController@index'
 ]);
+$router->get('projects/{id}', [
+    'as' => 'project.show', 'uses' => 'ProjectController@show'
+]);
+$router->post('projects', [
+    'as' => 'project.store', 'uses' => 'ProjectController@store'
+]);
+$router->put('projects/{id}', [
+    'as' => 'project.update', 'uses' => 'ProjectController@update'
+]);
