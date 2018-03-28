@@ -9,11 +9,6 @@ use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-    protected $default_aditional = [
-        'code' => 200,
-        'status' => 'ok',
-        'messages' => []
-    ];
 
     /**
      * List projects
@@ -28,8 +23,9 @@ class ProjectController extends Controller
         $order = $request->query('order', 'desc');
         $filters = $request->except('fields', 'sort', 'order');
         $projects = Project::select($fields)->where($filters)->orderBy($sort, $order)->get();
+        $projects_collection = new ProjectCollection($projects);
         
-        return $this->responseOkWithCollection($projects);
+        return $this->responseOkWithCollection($projects_collection);
     }
 
     /**
@@ -42,7 +38,8 @@ class ProjectController extends Controller
     public function show(Request $request, $id)
     {
         $project = Project::findOrFail($id);
-        return $this->responseOkWithResource($project);
+        $project_resource = new ProjectResource($project);
+        return $this->responseOkWithResource($project_resource);
     }
 
     /**
@@ -54,7 +51,8 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $project = Project::create($request->all());
-        return $this->responseOkWithResource($project, ['code' => 201]);
+        $project_resource = new ProjectResource($project);
+        return $this->responseOkWithResource($project_resource, ['code' => 201]);
     }
 
     /**
@@ -67,7 +65,7 @@ class ProjectController extends Controller
     {
         $project = Project::find($id);
         $project->update($request->all());
-        $new_project = Project::find($id);
+        $new_project = new ProjectResource(Project::find($id));
         return $this->responseOkWithResource($new_project);
     }
 
@@ -76,45 +74,5 @@ class ProjectController extends Controller
         $project = Project::find($id);
         $delete = $project->delete();
         return $this->responseOk();
-    }
-
-    /**
-     * Ok response with resource
-     *
-     * @param [type] $resource
-     * @param [type] $aditionals
-     * @return void
-     */
-    protected function responseOkWithResource($resource, $aditionals = [])
-    {
-        return (new ProjectResource($resource))
-            ->additional(array_merge($aditionals, $this->default_aditional));
-    }
-
-    /**
-     * Ok response with collection
-     *
-     * @param [type] $resource
-     * @param [type] $aditionals
-     * @return void
-     */
-    protected function responseOkWithCollection($collection, $aditionals = [])
-    {
-        return (new ProjectCollection($collection))
-            ->additional(array_merge($aditionals, $this->default_aditional));
-    }
-
-    /**
-     * Ok response
-     *
-     * @param [type] $resource
-     * @param [type] $aditionals
-     * @return void
-     */
-    protected function responseOk($aditionals = [])
-    {
-        $response = array_merge($this->default_aditional, $aditionals);
-        $response['data'] = [];
-        return $response;
     }
 }
