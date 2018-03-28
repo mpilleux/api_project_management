@@ -28,3 +28,14 @@ $factory->define(App\Project::class, function (Faker\Generator $faker) {
         'deleted_by' => null
     ];
 });
+
+$factory->define(App\Client::class, function (Faker\Generator $faker) {
+    return [
+        'slug' => $faker->slug,
+        'name' => $faker->sentence(),
+        'active' => $faker->boolean(),
+        'created_by' => $faker->randomNumber(),
+        'updated_by' => null,
+        'deleted_by' => null
+    ];
+});

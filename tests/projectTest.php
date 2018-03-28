@@ -81,6 +81,6 @@ class ProjectTest extends TestCase
                 'code' => 200,
                 'status' => 'ok',
                 'messages' => []
-             ]);
+            ]);
     }
 }
