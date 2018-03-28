@@ -65,4 +65,22 @@ class ProjectTest extends TestCase
         $this->seeJson($edited_project->toArray());
         $this->assertEquals($edited_project->name, 'editado');
     }
+
+    /**
+     * @return void
+     * @test
+     */
+    public function it_deletes_projects()
+    {
+        $project = factory(Project::class)->create();
+        $route = route('project.delete', ['id' => $project->id]);
+        $response = $this->delete($route)
+            ->seeStatusCode(200)
+            ->seeJsonEquals([
+                'data' => [],
+                'code' => 200,
+                'status' => 'ok',
+                'messages' => []
+             ]);
+    }
 }

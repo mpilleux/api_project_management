@@ -28,3 +28,6 @@ $router->post('projects', [
 $router->put('projects/{id}', [
     'as' => 'project.update', 'uses' => 'ProjectController@update'
 ]);
+$router->delete('projects/{id}', [
+    'as' => 'project.delete', 'uses' => 'ProjectController@delete'
+]);

@@ -71,6 +71,13 @@ class ProjectController extends Controller
         return $this->responseOkWithResource($new_project);
     }
 
+    public function delete($id)
+    {
+        $project = Project::find($id);
+        $delete = $project->delete();
+        return $this->responseOk();
+    }
+
     /**
      * Ok response with resource
      *
@@ -95,5 +102,19 @@ class ProjectController extends Controller
     {
         return (new ProjectCollection($collection))
             ->additional(array_merge($aditionals, $this->default_aditional));
+    }
+
+    /**
+     * Ok response
+     *
+     * @param [type] $resource
+     * @param [type] $aditionals
+     * @return void
+     */
+    protected function responseOk($aditionals = [])
+    {
+        $response = array_merge($this->default_aditional, $aditionals);
+        $response['data'] = [];
+        return $response;
     }
 }
