@@ -2,10 +2,11 @@
 
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use App\Client;
+use App\Project;
 
 class ClientTest extends TestCase
 {
-    use DatabaseMigrations;
+    use DatabaseMigrations, ModelHelpers;
     
     /**
      * @return void
@@ -14,7 +15,7 @@ class ClientTest extends TestCase
     public function it_list_all_clients()
     {
         $clients = factory('App\Client', 4)->create();
-        $response = $this->get(route('client.index'))->seeStatusCode(200);
+        $response = $this->get('/clients')->seeStatusCode(200);
         $this->seeJson($clients->first()->toArray());
     }
 
@@ -25,7 +26,7 @@ class ClientTest extends TestCase
     public function it_shows_a_client()
     {
         $client = factory('App\Client')->create();
-        $route = route('client.show', ['id' => $client->id]);
+        $route = 'clients/' . $client->id;
         $response = $this->get($route)->seeStatusCode(200);
         $this->seeJson($client->toArray());        
     }
@@ -36,7 +37,7 @@ class ClientTest extends TestCase
      */
     public function it_store_a_client()
     {
-        $route = route('client.store');
+        $route = '/clients';
         $data = [
             'slug' => 'sssddfasd',
             'name' => 'proyectoi de de',
@@ -58,7 +59,7 @@ class ClientTest extends TestCase
     {
         $client = factory(Client::class)->create(['name' => 'original']);
         $data = ['name' => 'editado']; 
-        $route = route('client.update', ['id' => $client->id]);
+        $route = 'clients/' . $client->id;
         $response = $this->put($route, $data)->seeStatusCode(200);
 
         $edited_client = Client::find($client->id);
@@ -73,7 +74,7 @@ class ClientTest extends TestCase
     public function it_deletes_clients()
     {
         $client = factory(Client::class)->create();
-        $route = route('client.delete', ['id' => $client->id]);
+        $route = 'clients/' . $client->id;
         $response = $this->delete($route)
             ->seeStatusCode(200)
             ->seeJsonEquals([
@@ -83,5 +84,32 @@ class ClientTest extends TestCase
                 'messages' => []
             ]);
         $this->assertCount(0, Client::all());    
+    }
+
+    /**
+     * @return void
+     * @test
+     */
+    public function it_has_many_projects()
+    {
+        $this->assertBelongsToMany('projects', Project::class, Client::class);
+    }
+
+    /**
+     * @return void
+     * @test
+     */
+    public function it_loads_projects()
+    {
+        $client = factory('App\Client')->create();
+        $projects = factory('App\Project', 2)->create();
+        $projects->each(function($project) use($client){
+            $client->projects()->save($project);
+        });
+        $this->assertCount(2, $client->projects);
+        $route = 'clients/' . $client->id;
+        $response = $this->get($route)->seeStatusCode(200);
+        // dd($client->toArray());
+        // $this->seeJson($client->toArray());
     }
 }

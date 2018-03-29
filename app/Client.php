@@ -25,4 +25,14 @@ class Client extends Model
         'deleted_by' => 'int'
     ];
 
+    /**
+     * One to many relationship
+     *
+     * @return void
+     */
+    public function projects()
+    {
+        return $this->belongsToMany('App\Project');    
+    }
+
 }

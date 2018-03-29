@@ -14,7 +14,7 @@ class ProjectTest extends TestCase
     public function it_list_all_projects()
     {
         $projects = factory('App\Project', 4)->create();
-        $response = $this->get(route('project.index'))->seeStatusCode(200);
+        $response = $this->get('/projects')->seeStatusCode(200);
         $this->seeJson($projects->first()->toArray());
     }
 
@@ -25,7 +25,7 @@ class ProjectTest extends TestCase
     public function it_shows_a_project()
     {
         $project = factory('App\Project')->create();
-        $route = route('project.show', ['id' => $project->id]);
+        $route = 'projects/' . $project->id;
         $response = $this->get($route)->seeStatusCode(200);
         $this->seeJson($project->toArray());        
     }
@@ -36,7 +36,7 @@ class ProjectTest extends TestCase
      */
     public function it_store_a_project()
     {
-        $route = route('project.store');
+        $route = '/projects';
         $data = [
             'slug' => 'sssddfasd',
             'name' => 'proyectoi de de',
@@ -58,7 +58,7 @@ class ProjectTest extends TestCase
     {
         $project = factory(Project::class)->create(['name' => 'original']);
         $data = ['name' => 'editado']; 
-        $route = route('project.update', ['id' => $project->id]);
+        $route = 'projects/' . $project->id;
         $response = $this->put($route, $data)->seeStatusCode(200);
 
         $edited_project = Project::find($project->id);
@@ -73,7 +73,7 @@ class ProjectTest extends TestCase
     public function it_deletes_projects()
     {
         $project = factory(Project::class)->create();
-        $route = route('project.delete', ['id' => $project->id]);
+        $route = 'projects/' . $project->id;
         $response = $this->delete($route)
             ->seeStatusCode(200)
             ->seeJsonEquals([
