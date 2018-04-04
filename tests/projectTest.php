@@ -34,6 +34,26 @@ class ProjectTest extends TestCase
      * @return void
      * @test
      */
+    public function it_shows_aproject_with_additional_data()
+    {
+        $project = factory('App\Project')->create();
+        $additional = factory('App\Additional')->create([
+            'additionable_id' => $project->id,
+            'additionable_type' => 'App\Project',
+            'key' => 'duracion',
+            'value_text' => null,
+            'value_int' => 12 
+        ]);
+        $route = 'projects/' . $project->id . '?with=addtionals';
+        $response = $this->get($route)->seeStatusCode(200);
+        // dd($this->response->getContent());
+        $this->seeJsonContains(['key' => 'duracion', 'value_int' => 12]);
+    }
+
+    /**
+     * @return void
+     * @test
+     */
     public function it_store_a_project()
     {
         $route = '/projects';
@@ -83,4 +103,5 @@ class ProjectTest extends TestCase
                 'messages' => []
             ]);
     }
+
 }

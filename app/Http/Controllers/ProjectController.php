@@ -38,6 +38,7 @@ class ProjectController extends Controller
     public function show(Request $request, $id)
     {
         $project = Project::findOrFail($id);
+        $this->loadRelations($project, 'additionals');
         $project_resource = new ProjectResource($project);
         return $this->responseOkWithResource($project_resource);
     }

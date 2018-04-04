@@ -38,6 +38,9 @@ class ClientController extends Controller
     public function show(Request $request, $id)
     {
         $client = Client::findOrFail($id);
+        
+        $this->loadRelations($client, $request->query('with'));
+        
         $client_resource = new ClientResource($client);
         return $this->responseOkWithResource($client_resource);
     }

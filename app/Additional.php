@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Project extends Model 
+class Additional extends Model 
 {
     /**
      * The attributes that are mass assignable.
@@ -20,17 +20,11 @@ class Project extends Model
      */
     protected $casts = [
         'active' => 'boolean',
+        'additionable_id' => 'int',
+        'value_int' => 'int',
         'created_by' => 'int',
         'updated_by' => 'int',
         'deleted_by' => 'int'
     ];
-
-    /**
-     * Get all of the projects's additionals.
-     */
-    public function additionals()
-    {
-        return $this->morphMany('App\Additional', 'additionable');
-    }
 
 }

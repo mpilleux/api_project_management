@@ -19,6 +19,7 @@ class ProjectResource extends Resource
             'slug' => $this->slug,
             'name' => $this->name,
             'active' => $this->active,
+            'additionals' => $this->whenLoaded('additionals'),
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'deleted_by' => $this->deleted_by,

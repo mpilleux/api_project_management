@@ -107,9 +107,9 @@ class ClientTest extends TestCase
             $client->projects()->save($project);
         });
         $this->assertCount(2, $client->projects);
-        $route = 'clients/' . $client->id;
+        $route = 'clients/' . $client->id . '?with=projects';
         $response = $this->get($route)->seeStatusCode(200);
-        // dd($client->toArray());
-        // $this->seeJson($client->toArray());
+        // dd($this->response->getContent());
+        $this->seeJson(['slug' => $client->projects->first()->slug]);
     }
 }
