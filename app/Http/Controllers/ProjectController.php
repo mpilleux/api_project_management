@@ -6,6 +6,7 @@ use App\Http\Resources\ProjectResource;
 use App\Http\Resources\ProjectCollection;
 use App\Project;
 use Illuminate\Http\Request;
+use App\Client;
 
 class ProjectController extends Controller
 {
@@ -51,7 +52,8 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        $project = Project::create($request->all());
+        $project = Project::create($request->except('additionals'));
+        $project->storeAdditionals($request->get('additionals'));
         $project_resource = new ProjectResource($project);
         return $this->responseOkWithResource($project_resource, ['code' => 201]);
     }
@@ -65,7 +67,8 @@ class ProjectController extends Controller
     public function update(Request $request, $id)
     {
         $project = Project::find($id);
-        $project->update($request->all());
+        $project->update($request->except('additionals'));
+        $project->updateAdditionals($request->get('additionals'));
         $new_project = new ProjectResource(Project::find($id));
         return $this->responseOkWithResource($new_project);
     }

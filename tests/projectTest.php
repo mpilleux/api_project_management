@@ -2,6 +2,7 @@
 
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use App\Project;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class ProjectTest extends TestCase
 {
@@ -56,18 +57,30 @@ class ProjectTest extends TestCase
      */
     public function it_store_a_project()
     {
+        //esta en el appServiceProvider, los tests no lo corren
+        // hay que ponerlo en un up method
+        Relation::morphMap([
+            'project' => App\Project::class,
+            'client' => App\Client::class,
+        ]); 
+
         $route = '/projects';
         $data = [
             'slug' => 'sssddfasd',
             'name' => 'proyectoi de de',
             'created_by' => 1,
-            'active' => 1
+            'active' => 1,
+            'additionals' => [
+                'color' => 'red'
+            ]
         ];
         $response = $this->post($route, $data)->seeStatusCode(201);
 
-        $project = Project::first(); 
+        $project = Project::first();
         $this->seeJson($project->toArray());
         $this->assertEquals($project->slug, 'sssddfasd');
+        $this->assertEquals($project->additionals()->first()->key, 'color');
+        $this->assertEquals($project->additionals()->first()->value_text, 'red');
     }
 
     /**
@@ -76,14 +89,33 @@ class ProjectTest extends TestCase
      */
     public function it_update_projects()
     {
+        //esta en el appServiceProvider, los tests no lo corren
+        // hay que ponerlo en un up method
+        Relation::morphMap([
+            'project' => App\Project::class,
+            'client' => App\Client::class,
+        ]);
+
         $project = factory(Project::class)->create(['name' => 'original']);
-        $data = ['name' => 'editado']; 
+        $project->additionals()->create(['key' => 'color', 'value_text' => 'red']);
+        $data = [
+            'name' => 'editado',
+            'additionals' => [
+                'color' => 'blue',
+                'size' => '2'
+            ]
+        ]; 
         $route = 'projects/' . $project->id;
         $response = $this->put($route, $data)->seeStatusCode(200);
 
         $edited_project = Project::find($project->id);
         $this->seeJson($edited_project->toArray());
         $this->assertEquals($edited_project->name, 'editado');
+        $this->assertEquals($project->additionals()->first()->key, 'color');
+        $this->assertEquals($project->additionals()->first()->value_text, 'blue');
+        
+        $this->assertEquals($project->additionals->last()->key, 'size');
+        $this->assertEquals($project->additionals->last()->value_int, 2);
     }
 
     /**

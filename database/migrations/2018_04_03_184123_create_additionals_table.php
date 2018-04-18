@@ -20,9 +20,6 @@ class CreateAdditionalsTable extends Migration
             $table->string('key');
             $table->longText('value_text')->nullable();
             $table->integer('value_int')->nullable();
-            $table->integer('created_by');
-            $table->integer('updated_by')->nullable();
-            $table->integer('deleted_by')->nullable();
             $table->timestamps();
         });
     }

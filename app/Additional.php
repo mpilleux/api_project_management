@@ -19,12 +19,8 @@ class Additional extends Model
      * @var array
      */
     protected $casts = [
-        'active' => 'boolean',
-        'additionable_id' => 'int',
-        'value_int' => 'int',
-        'created_by' => 'int',
-        'updated_by' => 'int',
-        'deleted_by' => 'int'
+        'additionable_id' => 'integer',
+        'value_int' => 'integer',
     ];
 
 }

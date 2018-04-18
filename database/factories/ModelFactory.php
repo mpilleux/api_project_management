@@ -43,20 +43,17 @@ $factory->define(App\Client::class, function (Faker\Generator $faker) {
 $factory->define(App\Additional::class, function (Faker\Generator $faker) {
     return [
         'additionable_id' => $faker->randomNumber(),
-        'additionable_type' => $faker->randomElement(['App\Project', 'App\Client']),
+        'additionable_type' => $faker->randomElement(['project', 'client']),
         'key' => $faker->word(),
         'value_text' => null,
         'value_int' => $faker->randomNumber(),
-        'created_by' => $faker->randomNumber(),
-        'updated_by' => null,
-        'deleted_by' => null
     ];
 });
 
 $factory->state(App\Additional::class, 'project', [
-    'additionable_type' => 'App\Project',
+    'additionable_type' => 'project',
 ]);
 
 $factory->state(App\Additional::class, 'client', [
-    'additionable_type' => 'App\Client',
+    'additionable_type' => 'client',
 ]);
