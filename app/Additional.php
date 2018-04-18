@@ -22,5 +22,4 @@ class Additional extends Model
         'additionable_id' => 'integer',
         'value_int' => 'integer',
     ];
-
 }

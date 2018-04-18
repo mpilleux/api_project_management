@@ -7,9 +7,21 @@ use App\Http\Resources\ProjectCollection;
 use App\Project;
 use Illuminate\Http\Request;
 use App\Client;
+use App\Repositories\AdditionalsRepository;
 
 class ProjectController extends Controller
 {
+    /**
+     * @var AdditionalsRepository
+     */
+    protected $additionalsRepo;
+
+    /**
+     * @param AdditionalsRepository $additionalsRepo
+     */
+    public function __construct(AdditionalsRepository $additionalsRepo) {
+        $this->additionalsRepo = $additionalsRepo;
+    }
 
     /**
      * List projects
@@ -53,7 +65,7 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $project = Project::create($request->except('additionals'));
-        $project->storeAdditionals($request->get('additionals'));
+        $this->additionalsRepo->storeForEntity($project, $request->get('additionals'));
         $project_resource = new ProjectResource($project);
         return $this->responseOkWithResource($project_resource, ['code' => 201]);
     }
@@ -68,9 +80,9 @@ class ProjectController extends Controller
     {
         $project = Project::find($id);
         $project->update($request->except('additionals'));
-        $project->updateAdditionals($request->get('additionals'));
-        $new_project = new ProjectResource(Project::find($id));
-        return $this->responseOkWithResource($new_project);
+        $this->additionalsRepo->updateForEntity($project, $request->get('additionals'));
+        $edited_project = new ProjectResource(Project::find($id));
+        return $this->responseOkWithResource($edited_project);
     }
 
     public function delete($id)
