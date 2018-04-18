@@ -45,7 +45,7 @@ class ProjectTest extends TestCase
             'value_text' => null,
             'value_int' => 12 
         ]);
-        $route = 'projects/' . $project->id . '?with=addtionals';
+        $route = 'projects/' . $project->id . '?with=additionals';
         $response = $this->get($route)->seeStatusCode(200);
         // dd($this->response->getContent());
         $this->seeJsonContains(['key' => 'duracion', 'value_int' => 12]);

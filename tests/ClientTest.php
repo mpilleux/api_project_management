@@ -35,6 +35,26 @@ class ClientTest extends TestCase
      * @return void
      * @test
      */
+    public function it_shows_client_with_additional_data()
+    {
+        $client = factory('App\Client')->create();
+        $additional = factory('App\Additional')->create([
+            'additionable_id' => $client->id,
+            'additionable_type' => 'App\Client',
+            'key' => 'duracion',
+            'value_text' => null,
+            'value_int' => 12 
+        ]);
+        $route = 'clients/' . $client->id . '?with=additionals';
+        $response = $this->get($route)->seeStatusCode(200);
+        // dd($this->response->getContent());
+        $this->seeJsonContains(['key' => 'duracion', 'value_int' => 12]);
+    }
+
+    /**
+     * @return void
+     * @test
+     */
     public function it_store_a_client()
     {
         $route = '/clients';
