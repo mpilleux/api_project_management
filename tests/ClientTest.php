@@ -42,13 +42,18 @@ class ClientTest extends TestCase
             'slug' => 'sssddfasd',
             'name' => 'proyectoi de de',
             'created_by' => 1,
-            'active' => 1
+            'active' => 1,
+            'additionals' => [
+                'color' => 'red'
+            ]
         ];
         $response = $this->post($route, $data)->seeStatusCode(201);
 
         $client = Client::first(); 
         $this->seeJson($client->toArray());
         $this->assertEquals($client->slug, 'sssddfasd');
+        $this->assertEquals($client->additionals()->first()->key, 'color');
+        $this->assertEquals($client->additionals()->first()->value_text, 'red');
     }
 
     /**
@@ -58,13 +63,24 @@ class ClientTest extends TestCase
     public function it_update_clients()
     {
         $client = factory(Client::class)->create(['name' => 'original']);
-        $data = ['name' => 'editado']; 
+        $data = [
+            'name' => 'editado',
+            'additionals' => [
+                'color' => 'blue',
+                'size' => '2'
+            ]
+        ]; 
         $route = 'clients/' . $client->id;
         $response = $this->put($route, $data)->seeStatusCode(200);
 
         $edited_client = Client::find($client->id);
         $this->seeJson($edited_client->toArray());
         $this->assertEquals($edited_client->name, 'editado');
+        $this->assertEquals($client->additionals()->first()->key, 'color');
+        $this->assertEquals($client->additionals()->first()->value_text, 'blue');
+        
+        $this->assertEquals($client->additionals->last()->key, 'size');
+        $this->assertEquals($client->additionals->last()->value_int, 2);
     }
 
     /**

@@ -35,4 +35,12 @@ class Client extends Model
         return $this->belongsToMany('App\Project');    
     }
 
+    /**
+     * Get all of the client's additionals.
+     */
+    public function additionals()
+    {
+        return $this->morphMany('App\Additional', 'additionable');
+    }
+
 }
