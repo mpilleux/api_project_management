@@ -5,21 +5,9 @@ namespace App\Repositories;
 use App\Client;
 use Illuminate\Http\Request;
 
-class ClientRepository 
+class ClientRepository extends Repository
 {
     use ManageAdditionals;
-
-     /**
-     * @var array
-     */
-    protected $client_fields = [
-        'slug', 
-        'name',
-        'active',
-        'created_by',
-        'updated_by',
-        'deleted_by',
-    ];
 
     /**
      * Find or fail by id
@@ -90,25 +78,19 @@ class ClientRepository
     }
 
     /**
-     * Only the additionals fields
+     * The fields for the model
      *
-     * @param Request $request
      * @return void
      */
-    protected function getAdditionalData(Request $request)
+    protected function getModelFields()
     {
-        return $request->except($this->client_fields);
+        return [
+            'slug', 
+            'name',
+            'active',
+            'created_by',
+            'updated_by',
+            'deleted_by',
+        ];
     }
-
-    /**
-     * All but the additionals fields
-     *
-     * @param Request $request
-     * @return void
-     */
-    protected function getDataWithoutAdditionals(Request $request)
-    {
-        return $request->only($this->client_fields);
-    }
-
 }
