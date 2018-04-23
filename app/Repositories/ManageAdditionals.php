@@ -3,8 +3,9 @@
 namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Additional;
 
-class AdditionalsRepository
+trait ManageAdditionals
 {
     /**
      * Store additionals in entity
@@ -13,7 +14,7 @@ class AdditionalsRepository
      * @param array $additionals
      * @return void
      */
-    public function storeForEntity(Model $entity, array $additionals)
+    protected function storeAdditionalsForEntity(Model $entity, array $additionals)
     {
         foreach ($additionals as $key => $value) {
             $val_field = $this->getAdditionalValField($value);
@@ -28,7 +29,7 @@ class AdditionalsRepository
      * @param array $additionals
      * @return void
      */
-    public function updateForEntity(Model $entity, array $additionals)
+    protected function updateAdditionalsForEntity(Model $entity, array $additionals)
     {
         foreach ($additionals as $key => $value) {
             $val_field = $this->getAdditionalValField($value);
@@ -45,6 +46,24 @@ class AdditionalsRepository
     }
 
     /**
+     * Delete by model id and type
+     *
+     * @param integer $id
+     * @param string $type
+     * @return void
+     */
+    protected function deleteAdditionalsForEntityId(int $id, string $type)
+    {
+        $additionals = Additional::where([
+            ['additionable_id', '=', $id],
+            ['additionable_type', '=', $type],
+        ])->get();
+        $additionals->each(function($additional){
+            $additional->delete();
+        });
+    }
+
+    /**
      * Get the value field for additionals
      *
      * @param [type] $value
@@ -53,5 +72,5 @@ class AdditionalsRepository
     protected function getAdditionalValField($value)
     {
         return is_numeric($value) ? 'value_int' : 'value_text';    
-    }
+    }    
 }

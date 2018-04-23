@@ -37,10 +37,13 @@ class ProjectTest extends TestCase
      */
     public function it_shows_aproject_with_additional_data()
     {
+        Relation::morphMap([
+            'project' => App\Project::class
+        ]);
         $project = factory('App\Project')->create();
         $additional = factory('App\Additional')->create([
             'additionable_id' => $project->id,
-            'additionable_type' => 'App\Project',
+            'additionable_type' => 'project',
             'key' => 'duracion',
             'value_text' => null,
             'value_int' => 12 
@@ -48,7 +51,7 @@ class ProjectTest extends TestCase
         $route = 'projects/' . $project->id . '?with=additionals';
         $response = $this->get($route)->seeStatusCode(200);
         // dd($this->response->getContent());
-        $this->seeJsonContains(['key' => 'duracion', 'value_int' => 12]);
+        $this->seeJsonContains(['duracion' => 12]);
     }
 
     /**
@@ -70,9 +73,7 @@ class ProjectTest extends TestCase
             'name' => 'proyectoi de de',
             'created_by' => 1,
             'active' => 1,
-            'additionals' => [
-                'color' => 'red'
-            ]
+            'color' => 'red'
         ];
         $response = $this->post($route, $data)->seeStatusCode(201);
 
@@ -100,10 +101,8 @@ class ProjectTest extends TestCase
         $project->additionals()->create(['key' => 'color', 'value_text' => 'red']);
         $data = [
             'name' => 'editado',
-            'additionals' => [
-                'color' => 'blue',
-                'size' => '2'
-            ]
+            'color' => 'blue',
+            'size' => '2'
         ]; 
         $route = 'projects/' . $project->id;
         $response = $this->put($route, $data)->seeStatusCode(200);

@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ProjectResource;
 use App\Http\Resources\ProjectCollection;
 use App\Project;
+use App\Http\Resources\Project as ProjectResource;
 use Illuminate\Http\Request;
 use App\Client;
 use App\Repositories\AdditionalsRepository;
+use App\Repositories\ProjectRepository;
 
 class ProjectController extends Controller
 {
     /**
-     * @var AdditionalsRepository
+     * @var ProjectRepository
      */
-    protected $additionalsRepo;
+    protected $projectRepo;
 
     /**
-     * @param AdditionalsRepository $additionalsRepo
+     * @param ProjectRepository $projectRepo
      */
-    public function __construct(AdditionalsRepository $additionalsRepo) {
-        $this->additionalsRepo = $additionalsRepo;
+    public function __construct(ProjectRepository $projectRepo) {
+        $this->projectRepo = $projectRepo;
     }
 
     /**
@@ -50,10 +51,9 @@ class ProjectController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $project = Project::findOrFail($id);
-        $this->loadRelations($project, 'additionals');
-        $project_resource = new ProjectResource($project);
-        return $this->responseOkWithResource($project_resource);
+        $project = $this->projectRepo->findOrFail($id);
+        $this->loadRelations($project, $request->query('with'));
+        return $this->responseOkWithResource($project);
     }
 
     /**
@@ -64,10 +64,8 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        $project = Project::create($request->except('additionals'));
-        $this->additionalsRepo->storeForEntity($project, $request->get('additionals'));
-        $project_resource = new ProjectResource($project);
-        return $this->responseOkWithResource($project_resource, ['code' => 201]);
+        $project = $this->projectRepo->create($request);
+        return $this->responseOkWithResource($project, ['code' => 201]);
     }
 
     /**
@@ -78,17 +76,21 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $project = Project::find($id);
-        $project->update($request->except('additionals'));
-        $this->additionalsRepo->updateForEntity($project, $request->get('additionals'));
-        $edited_project = new ProjectResource(Project::find($id));
-        return $this->responseOkWithResource($edited_project);
+        $project = $this->projectRepo->findOrFail($id);
+        $update = $this->projectRepo->update($project, $request);
+        return $this->responseOkWithResource($project);
     }
 
+    /**
+     * @param [type] $id
+     * @return void
+     */
     public function delete($id)
     {
-        $project = Project::find($id);
-        $delete = $project->delete();
+        $delete = $this->projectRepo->delete($id);
+        if(!$delete){
+            return $this->responseError('Problem deleting the project');
+        }
         return $this->responseOk();
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Model;
+
 trait DefaultResponses 
 {
     /**
@@ -18,13 +20,14 @@ trait DefaultResponses
     /**
      * Ok response with resource
      *
-     * @param Illuminate\Http\Resources\Json\Resource $resource
+     * @param Model $model
      * @param array $aditionals
      * @return void
      */
-    public function responseOkWithResource($resource, $aditionals = [])
+    public function responseOkWithResource($model, $aditionals = [])
     {
         $aditionals = array_merge($aditionals, $this->default_aditional);
+        $resource = $this->getResourceFromModel($model);
         return $resource->additional($aditionals);
     }
 
@@ -51,5 +54,18 @@ trait DefaultResponses
         $response = array_merge($this->default_aditional, $aditionals);
         $response['data'] = [];
         return $response;
+    }
+
+    /**
+     * Get the resource for the model
+     *
+     * @param Model $model
+     * @return void
+     */
+    protected function getResourceFromModel(Model $model)
+    {
+        $model_base_name = str_after(get_class($model), 'App\\');
+        $resource_name = 'App\\Http\\Resources\\' . $model_base_name;
+        return new $resource_name($model);
     }
 }

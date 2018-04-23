@@ -48,7 +48,7 @@ class ClientTest extends TestCase
         $route = 'clients/' . $client->id . '?with=additionals';
         $response = $this->get($route)->seeStatusCode(200);
         // dd($this->response->getContent());
-        $this->seeJsonContains(['key' => 'duracion', 'value_int' => 12]);
+        $this->seeJsonContains(['duracion' => 12]);
     }
 
     /**
@@ -63,9 +63,7 @@ class ClientTest extends TestCase
             'name' => 'proyectoi de de',
             'created_by' => 1,
             'active' => 1,
-            'additionals' => [
-                'color' => 'red'
-            ]
+            'color' => 'red'
         ];
         $response = $this->post($route, $data)->seeStatusCode(201);
 
@@ -85,10 +83,8 @@ class ClientTest extends TestCase
         $client = factory(Client::class)->create(['name' => 'original']);
         $data = [
             'name' => 'editado',
-            'additionals' => [
-                'color' => 'blue',
-                'size' => '2'
-            ]
+            'color' => 'blue',
+            'size' => '2'
         ]; 
         $route = 'clients/' . $client->id;
         $response = $this->put($route, $data)->seeStatusCode(200);
