@@ -61,3 +61,7 @@ $router->get('clients/{client_id}/contacts/{contact_id}', [
 $router->post('clients/{client_id}/contacts/', [
     'as' => 'client.contact.store', 'uses' => 'ClientContactController@store'
 ]);
+
+$router->put('clients/{client_id}/contacts/{contact_id}', [
+    'as' => 'client.contact.update', 'uses' => 'ClientContactController@update'
+]);

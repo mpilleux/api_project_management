@@ -59,16 +59,16 @@ class ContactRepository extends Repository
     }
 
     /**
-     * update the client
+     * update the contact
      *
-     * @param Client $client
+     * @param Contact $contact
      * @param Request $request
      * @return void
      */
-    public function update(Client $client, Request $request)
+    public function update(Contact $contact, Request $request)
     {
-        $update = $client->update($this->getDataWithoutAdditionals($request));
-        $this->updateAdditionalsForEntity($client, $this->getAdditionalData($request));
+        $update = $contact->update($this->getDataWithoutAdditionals($request));
+        $this->updateAdditionalsForEntity($contact, $this->getAdditionalData($request));
         return $update;
     }
 

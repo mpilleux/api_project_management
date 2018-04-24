@@ -71,11 +71,11 @@ class ClientContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $client_id, $contact_id)
     {
-        $client = $this->clientRepo->findOrFail($id);
-        $update = $this->clientRepo->update($client, $request);
-        return $this->responseOkWithResource($client);
+        $contact = $this->contactRepo->findOrFail($contact_id);
+        $update = $this->contactRepo->update($contact, $request);
+        return $this->responseOkWithResource($contact);
     }
 
     /**

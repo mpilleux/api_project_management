@@ -2,6 +2,7 @@
 
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use App\Contact;
 
 class ClientContactTest extends TestCase
 {
@@ -51,7 +52,7 @@ class ClientContactTest extends TestCase
             'client_id' => $client->id
         ]);
         $additional = factory('App\Additional')->create([
-            'additionable_id' => $client->id,
+            'additionable_id' => $contact->id,
             'additionable_type' => 'contact',
             'key' => 'phone2',
             'value_text' => '9999',
@@ -88,5 +89,44 @@ class ClientContactTest extends TestCase
         $this->assertEquals($contact->slug, 'sssddfasd');
         $this->assertEquals($contact->additionals()->first()->key, 'color');
         $this->assertEquals($contact->additionals()->first()->value_text, 'red');
+    }
+
+    /**
+     * @return void
+     * @test
+     */
+    public function it_updates_contacts()
+    {
+        Relation::morphMap([
+            'contact' => App\Contact::class
+        ]); 
+        $client = factory('App\Client')->create();
+        $contact = factory('App\Contact')->create([
+            'client_id' => $client->id,
+            'email' => 'old_email@example.com'
+        ]);
+        $additional = factory('App\Additional')->create([
+            'additionable_id' => $contact->id,
+            'additionable_type' => 'contact',
+            'key' => 'phone2',
+            'value_text' => '9999',
+            'value_int' => null 
+        ]);
+        $route = '/clients/' . $client->id . '/contacts/' . $contact->id;
+        $data = [
+            'email' => 'new_email@example.com',
+            'phone2' => '9-(8888)',
+            'size' => 2
+        ]; 
+        $response = $this->put($route, $data)->seeStatusCode(200);
+
+        $edited_contact = Contact::find($contact->id);
+        $this->seeJson($edited_contact->toArray());
+        $this->assertEquals($edited_contact->email, 'new_email@example.com');
+        $this->assertEquals($contact->additionals()->first()->key, 'phone2');
+        $this->assertEquals($contact->additionals()->first()->value_text, '9-(8888)');
+        
+        $this->assertEquals($contact->additionals->last()->key, 'size');
+        $this->assertEquals($contact->additionals->last()->value_int, 2);
     }
 }

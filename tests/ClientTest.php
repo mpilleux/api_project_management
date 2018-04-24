@@ -78,7 +78,7 @@ class ClientTest extends TestCase
      * @return void
      * @test
      */
-    public function it_update_clients()
+    public function it_updates_clients()
     {
         $client = factory(Client::class)->create(['name' => 'original']);
         $data = [
