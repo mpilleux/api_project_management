@@ -40,6 +40,23 @@ $factory->define(App\Client::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\Contact::class, function (Faker\Generator $faker) {
+    return [
+        'slug' => $faker->slug,
+        'name' => $faker->name,
+        'email' => $faker->email,
+        'phone' => $faker->phoneNumber,
+        'address' => $faker->address,
+        'active' => $faker->boolean(),
+        'client_id' => function () {
+            return factory(App\Client::class)->create()->id;
+        },
+        'created_by' => $faker->randomNumber(),
+        'updated_by' => null,
+        'deleted_by' => null
+    ];
+});
+
 $factory->define(App\Additional::class, function (Faker\Generator $faker) {
     return [
         'additionable_id' => $faker->randomNumber(),

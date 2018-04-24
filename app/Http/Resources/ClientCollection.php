@@ -14,11 +14,6 @@ class ClientCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return [
-            'data' => [
-                'clients' => $this->collection
-            ]
-        ];
+        return $this->collection;
     }
-
 }

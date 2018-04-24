@@ -4,27 +4,32 @@ namespace App\Repositories;
 
 use App\Client;
 use Illuminate\Http\Request;
+use App\Contact;
 
-class ClientRepository extends Repository
+class ContactRepository extends Repository
 {
     use ManageAdditionals;
 
     /**
+     * All contacts for client
+     *
+     * @param Client $client
      * @param Request $request
      * @return void
      */
-    public function all(Request $request)
+    public function allForClient(Client $client, Request $request)
     {
         $fields = $request->query('fields', '*');
         $fields = explode(",", $fields);
         $sort = $request->query('sort', 'id');
         $order = $request->query('order', 'desc');
         $filters = $request->except('fields', 'sort', 'order');
-        $clients = Client::select($fields)
+        $contacts = $client->contacts()
+            ->select($fields)
             ->where($filters)
             ->orderBy($sort, $order)
             ->get();
-        return $clients;    
+        return $contacts;
     }
 
     /**
@@ -35,7 +40,7 @@ class ClientRepository extends Repository
      */
     public function findOrFail($id)
     {
-        return Client::with('additionals')->findOrFail($id);  
+        return Contact::with('additionals')->findOrFail($id);  
     }
 
     /**

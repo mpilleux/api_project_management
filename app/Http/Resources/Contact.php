@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-class Project extends AdditionableResource
+class Contact extends AdditionableResource
 {
     /**
      * Transform the resource into an array.
@@ -13,10 +13,13 @@ class Project extends AdditionableResource
     public function toArray($request)
     {
         $data = collect([
-            'id' => $this->id,
             'slug' => $this->slug,
             'name' => $this->name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'address' => $this->address,
             'active' => $this->active,
+            'client_id' => $this->client_id,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'deleted_by' => $this->deleted_by,

@@ -31,15 +31,8 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
-        $fields = $request->query('fields', '*');
-        $fields = explode(",", $fields);
-        $sort = $request->query('sort', 'id');
-        $order = $request->query('order', 'desc');
-        $filters = $request->except('fields', 'sort', 'order');
-        $projects = Project::select($fields)->where($filters)->orderBy($sort, $order)->get();
-        $projects_collection = new ProjectCollection($projects);
-        
-        return $this->responseOkWithCollection($projects_collection);
+        $projects = $this->projectRepo->all($request);
+        return $this->responseOkWithCollection($projects);
     }
 
     /**

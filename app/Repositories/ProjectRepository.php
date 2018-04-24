@@ -10,6 +10,24 @@ class ProjectRepository extends Repository
     use ManageAdditionals;
 
     /**
+     * @param Request $request
+     * @return void
+     */
+    public function all(Request $request)
+    {
+        $fields = $request->query('fields', '*');
+        $fields = explode(",", $fields);
+        $sort = $request->query('sort', 'id');
+        $order = $request->query('order', 'desc');
+        $filters = $request->except('fields', 'sort', 'order');
+        $projects = Project::select($fields)
+            ->where($filters)
+            ->orderBy($sort, $order)
+            ->get();
+        return $projects;    
+    }
+
+    /**
      * Find or fail by id
      *
      * @param integer $id

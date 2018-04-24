@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Resources\ClientCollection;
-use App\Client;
-use App\Http\Resources\ClientResource;
 use App\Repositories\ClientRepository;
+use App\Repositories\ContactRepository;
 
-class ClientController extends Controller
+class ClientContactController extends Controller
 {
     /**
      * @var ClientRepository
@@ -16,21 +14,28 @@ class ClientController extends Controller
     protected $clientRepo;
 
     /**
+     * @var ContactRepository
+     */
+    protected $conatctRepo;
+
+    /**
      * @param ClientRepository $clientRepo
      */
-    public function __construct(ClientRepository $clientRepo) {
+    public function __construct(ClientRepository $clientRepo, ContactRepository $conatctRepo) {
         $this->clientRepo = $clientRepo;
+        $this->contactRepo = $conatctRepo;
     }
 
     /**
-     * List Clients
+     * List Contacts for client
      *
      * @return void
      */
-    public function index(Request $request)
+    public function index(Request $request, $client_id)
     {
-        $clients = $this->clientRepo->all($request);
-        return $this->responseOkWithCollection($clients);
+        $client = $this->clientRepo->findOrFail($client_id);
+        $contacts = $this->contactRepo->allForClient($client, $request);
+        return $this->responseOkWithCollection($contacts);
     }
 
     /**

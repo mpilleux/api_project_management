@@ -48,3 +48,8 @@ $router->put('clients/{id}', [
 $router->delete('clients/{id}', [
     'as' => 'client.delete', 'uses' => 'ClientController@delete'
 ]);
+
+//ClientContact
+$router->get('clients/{id}/contacts', [
+    'as' => 'client.contact.index', 'uses' => 'ClientContactController@index'
+]);

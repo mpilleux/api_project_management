@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model 
+class Contact extends Model 
 {
     /**
      * The attributes that are mass assignable.
@@ -20,28 +20,11 @@ class Client extends Model
      */
     protected $casts = [
         'active' => 'boolean',
+        'client_id' => 'int',
         'created_by' => 'int',
         'updated_by' => 'int',
         'deleted_by' => 'int'
     ];
-
-    /**
-     * One to many relationship
-     *
-     * @return void
-     */
-    public function projects()
-    {
-        return $this->belongsToMany('App\Project');    
-    }
-
-    /**
-     * @return void
-     */
-    public function contacts()
-    {
-        return $this->hasMany('App\Contact');    
-    }
 
     /**
      * Get all of the client's additionals.
