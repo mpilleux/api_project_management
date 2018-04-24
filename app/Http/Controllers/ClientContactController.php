@@ -84,11 +84,11 @@ class ClientContactController extends Controller
      * @param [type] $id
      * @return void
      */
-    public function delete($id)
+    public function delete($client_id, $contact_id)
     {
-        $delete = $this->clientRepo->delete($id);
+        $delete = $this->contactRepo->delete($contact_id);
         if(!$delete){
-            return $this->responseError('Problem deleting the client');
+            return $this->responseError('Problem deleting the contact');
         }
         return $this->responseOk();
     }

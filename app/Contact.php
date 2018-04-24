@@ -27,6 +27,14 @@ class Contact extends Model
     ];
 
     /**
+     * @return void
+     */
+    public function client()
+    {
+        return $this->belongsTo('App\Client');
+    }
+
+    /**
      * Get all of the client's additionals.
      */
     public function additionals()

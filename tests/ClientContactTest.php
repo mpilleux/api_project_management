@@ -129,4 +129,23 @@ class ClientContactTest extends TestCase
         $this->assertEquals($contact->additionals->last()->key, 'size');
         $this->assertEquals($contact->additionals->last()->value_int, 2);
     }
+
+    /**
+     * @return void
+     * @test
+     */
+    public function it_deletes_contacts()
+    {
+        $contact = factory(contact::class)->create();
+        $route = 'clients/' . $contact->client->id . '/contacts/' . $contact->id;
+        $response = $this->delete($route)
+            ->seeStatusCode(200)
+            ->seeJsonEquals([
+                'data' => [],
+                'code' => 200,
+                'status' => 'ok',
+                'messages' => []
+            ]);
+        $this->assertCount(0, Contact::all());    
+    }
 }

@@ -65,3 +65,7 @@ $router->post('clients/{client_id}/contacts/', [
 $router->put('clients/{client_id}/contacts/{contact_id}', [
     'as' => 'client.contact.update', 'uses' => 'ClientContactController@update'
 ]);
+
+$router->delete('clients/{client_id}/contacts/{contact_id}', [
+    'as' => 'client.contact.delete', 'uses' => 'ClientContactController@delete'
+]);
