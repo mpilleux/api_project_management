@@ -13,5 +13,8 @@ class ClientsTableSeeder extends Seeder
     public function run()
     {
         factory(App\Client::class, 2)->create();
+        factory(App\Contact::class, 2)->create([
+            'client_id' => 1
+        ]);
     }
 }

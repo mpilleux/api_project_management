@@ -100,7 +100,7 @@ class ContactRepository extends Repository
             'email' => $request->get('email'),
             'phone' => $request->get('phone'),
             'address' => $request->get('address'),
-            'active' => $request->get('active'),
+            'active' => 1,
             'client_id' => null,
             'created_by' => $request->get('created_by'),
             'updated_by' => $request->get('updated_by'),

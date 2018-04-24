@@ -71,6 +71,7 @@ class ProjectController extends Controller
     {
         $project = $this->projectRepo->findOrFail($id);
         $update = $this->projectRepo->update($project, $request);
+        $project = $this->projectRepo->findOrFail($project->id);
         return $this->responseOkWithResource($project);
     }
 

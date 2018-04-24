@@ -69,6 +69,7 @@ class ClientController extends Controller
     {
         $client = $this->clientRepo->findOrFail($id);
         $update = $this->clientRepo->update($client, $request);
+        $client = $this->clientRepo->findOrFail($client->id);
         return $this->responseOkWithResource($client);
     }
 

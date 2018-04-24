@@ -75,6 +75,7 @@ class ClientContactController extends Controller
     {
         $contact = $this->contactRepo->findOrFail($contact_id);
         $update = $this->contactRepo->update($contact, $request);
+        $contact = $this->contactRepo->findOrFail($contact->id);
         return $this->responseOkWithResource($contact);
     }
 
