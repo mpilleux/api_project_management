@@ -13,6 +13,7 @@ class Contact extends AdditionableResource
     public function toArray($request)
     {
         $data = collect([
+            'id' => $this->id,
             'slug' => $this->slug,
             'name' => $this->name,
             'email' => $this->email,

@@ -53,3 +53,11 @@ $router->delete('clients/{id}', [
 $router->get('clients/{id}/contacts', [
     'as' => 'client.contact.index', 'uses' => 'ClientContactController@index'
 ]);
+
+$router->get('clients/{client_id}/contacts/{contact_id}', [
+    'as' => 'client.contact.show', 'uses' => 'ClientContactController@show'
+]);
+
+$router->post('clients/{client_id}/contacts/', [
+    'as' => 'client.contact.store', 'uses' => 'ClientContactController@store'
+]);

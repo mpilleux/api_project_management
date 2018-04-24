@@ -25,6 +25,7 @@ class CreateContactsTable extends Migration
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
             $table->unsignedInteger('deleted_by')->nullable();
+            $table->unsignedInteger('deleted_at')->nullable();
             $table->timestamps();
 
             $table->foreign('client_id')

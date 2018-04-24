@@ -44,16 +44,18 @@ class ContactRepository extends Repository
     }
 
     /**
-     * Create the client from the request
+     * Create the contact from the request
      *
      * @param Request $request
      * @return void
      */
-    public function create(Request $request)
+    public function create(Client $client, Request $request)
     {
-        $client = Client::create($this->getClientData($request));
-        $this->storeAdditionalsForEntity($client, $this->getAdditionalData($request));
-        return $client->load('additionals');
+        $contact_data = $this->getContactData($request);
+        $contact_data['client_id'] = $client->id;
+        $contact = Contact::create($contact_data);
+        $this->storeAdditionalsForEntity($contact, $this->getAdditionalData($request));
+        return $contact->load('additionals');
     }
 
     /**
@@ -90,30 +92,48 @@ class ContactRepository extends Repository
      * @param Request $request
      * @return void
      */
-    protected function getClientData(Request $request)
+    protected function getContactData(Request $request)
     {
         return [
             'slug' => $request->get('slug'),
             'name' => $request->get('name'),
+            'email' => $request->get('email'),
+            'phone' => $request->get('phone'),
+            'address' => $request->get('address'),
             'active' => $request->get('active'),
+            'client_id' => null,
             'created_by' => $request->get('created_by'),
+            'updated_by' => $request->get('updated_by'),
+            'deleted_by' => $request->get('deleted_by'),
+            'created_at' => $request->get('created_at'),
+            'updated_at' => $request->get('updated_at'),
+            'deleted_at' => $request->get('deleted_at')
         ];
     }
 
     /**
      * The fields for the model
+     * Any field not in this list is 
+     * an additional field
      *
      * @return void
      */
     protected function getModelFields()
     {
         return [
-            'slug', 
+            'slug',
             'name',
+            'email',
+            'phone',
+            'address',
             'active',
+            'client_id',
             'created_by',
             'updated_by',
             'deleted_by',
+            'created_at',
+            'updated_at',
+            'deleted_at'
         ];
     }
 }

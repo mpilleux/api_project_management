@@ -16,14 +16,14 @@ class ClientContactController extends Controller
     /**
      * @var ContactRepository
      */
-    protected $conatctRepo;
+    protected $contactRepo;
 
     /**
      * @param ClientRepository $clientRepo
      */
-    public function __construct(ClientRepository $clientRepo, ContactRepository $conatctRepo) {
+    public function __construct(ClientRepository $clientRepo, ContactRepository $contactRepo) {
         $this->clientRepo = $clientRepo;
-        $this->contactRepo = $conatctRepo;
+        $this->contactRepo = $contactRepo;
     }
 
     /**
@@ -45,11 +45,11 @@ class ClientContactController extends Controller
      * @param [type] $id
      * @return void
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, $client_id, $contact_id)
     {
-        $client = $this->clientRepo->findOrFail($id);
-        $this->loadRelations($client, $request->query('with'));
-        return $this->responseOkWithResource($client);
+        $contact = $this->contactRepo->findOrFail($contact_id);
+        $this->loadRelations($contact, $request->query('with'));
+        return $this->responseOkWithResource($contact);
     }
 
     /**
@@ -58,10 +58,11 @@ class ClientContactController extends Controller
      * @param Request $request
      * @return void
      */
-    public function store(Request $request)
+    public function store(Request $request, $client_id)
     {
-        $client = $this->clientRepo->create($request);
-        return $this->responseOkWithResource($client, ['code' => 201]);
+        $client = $this->clientRepo->findOrFail($client_id);
+        $contact = $this->contactRepo->create($client, $request);
+        return $this->responseOkWithResource($contact, ['code' => 201]);
     }
 
     /**

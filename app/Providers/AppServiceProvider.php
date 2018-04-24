@@ -22,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
         Relation::morphMap([
             'project' => App\Project::class,
             'client' => App\Client::class,
-        ]);   
+            'contact' => App\Contact::class
+        ]);
     }
 }
