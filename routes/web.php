@@ -69,3 +69,24 @@ $router->put('clients/{client_id}/contacts/{contact_id}', [
 $router->delete('clients/{client_id}/contacts/{contact_id}', [
     'as' => 'client.contact.delete', 'uses' => 'ClientContactController@delete'
 ]);
+
+//Providers
+$router->get('providers', [
+    'as' => 'provider.index', 'uses' => 'ProviderController@index'
+]);
+
+$router->get('providers/{id}', [
+    'as' => 'provider.show', 'uses' => 'ProviderController@show'
+]);
+
+$router->post('providers', [
+    'as' => 'provider.store', 'uses' => 'ProviderController@store'
+]);
+
+$router->put('providers/{id}', [
+    'as' => 'provider.update', 'uses' => 'ProviderController@update'
+]);
+
+$router->delete('providers/{id}', [
+    'as' => 'provider.delete', 'uses' => 'ProviderController@delete'
+]);

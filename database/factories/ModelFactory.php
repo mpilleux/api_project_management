@@ -57,6 +57,28 @@ $factory->define(App\Contact::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\Provider::class, function (Faker\Generator $faker) {
+    return [
+        'slug' => $faker->slug,
+        'name' => $faker->name,
+        'active' => $faker->boolean(),
+    ];
+});
+
+$factory->define(App\Scope::class, function (Faker\Generator $faker) {
+    return [
+        'slug' => $faker->slug,
+        'name' => $faker->name,
+        'active' => $faker->boolean(),
+        'provider_id' => function () {
+            return factory(App\Provider::class)->create()->id;
+        },
+        'project_id' => function () {
+            return factory(App\Project::class)->create()->id;
+        }
+    ];
+});
+
 $factory->define(App\Additional::class, function (Faker\Generator $faker) {
     return [
         'additionable_id' => $faker->randomNumber(),
