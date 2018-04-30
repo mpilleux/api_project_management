@@ -90,3 +90,24 @@ $router->put('providers/{id}', [
 $router->delete('providers/{id}', [
     'as' => 'provider.delete', 'uses' => 'ProviderController@delete'
 ]);
+
+//Scopes
+$router->get('scopes', [
+    'as' => 'scope.index', 'uses' => 'ScopeController@index'
+]);
+
+$router->get('scopes/{id}', [
+    'as' => 'scope.show', 'uses' => 'ScopeController@show'
+]);
+
+$router->post('scopes', [
+    'as' => 'scope.store', 'uses' => 'ScopeController@store'
+]);
+
+$router->put('scopes/{id}', [
+    'as' => 'scope.update', 'uses' => 'ScopeController@update'
+]);
+
+$router->delete('scopes/{id}', [
+    'as' => 'scope.delete', 'uses' => 'ScopeController@delete'
+]);

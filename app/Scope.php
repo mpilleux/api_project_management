@@ -21,6 +21,8 @@ class Scope extends Model
     protected $casts = [
         'active' => 'boolean',
         'created_by' => 'int',
+        'project_id' => 'int',
+        'provider_id' => 'int',
         'updated_by' => 'int',
         'deleted_by' => 'int'
     ];

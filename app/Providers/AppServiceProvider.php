@@ -23,7 +23,8 @@ class AppServiceProvider extends ServiceProvider
             'project' => App\Project::class,
             'client' => App\Client::class,
             'contact' => App\Contact::class,
-            'provider' => App\Provider::class
+            'provider' => App\Provider::class,
+            'scope' => App\Scope::class
         ]);
     }
 }

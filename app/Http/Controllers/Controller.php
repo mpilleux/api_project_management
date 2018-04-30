@@ -18,7 +18,7 @@ class Controller extends BaseController
     public function loadRelations($entity, $relations)
     {
         if ($relations) {
-            $entity->load($relations);    
+            $entity->load(explode(",", $relations));    
         }    
     }
 }
