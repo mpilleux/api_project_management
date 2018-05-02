@@ -2,11 +2,12 @@
 
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use App\Project;
+use App\Type;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 class ProjectTest extends TestCase
 {
-    use DatabaseMigrations;
+    use DatabaseMigrations, ModelHelpers;
     
     /**
      * @return void
@@ -52,6 +53,23 @@ class ProjectTest extends TestCase
         $response = $this->get($route)->seeStatusCode(200);
         // dd($this->response->getContent());
         $this->seeJsonContains(['duracion' => 12]);
+    }
+
+    /**
+     * @return void
+     * @test
+     */
+    public function it_shows_a_project_with_type()
+    {
+        $type = factory('App\Type')->create();
+        $project = factory('App\Project')->create([
+            'type_id' => $type->id
+        ]);
+        $route = 'projects/' . $project->id . '?with=type';
+        $response = $this->get($route)->seeStatusCode(200);
+        // dd($this->response->getContent());
+        $this->seeJsonContains(['slug' => $type->slug]);
+        
     }
 
     /**
@@ -133,6 +151,15 @@ class ProjectTest extends TestCase
                 'status' => 'ok',
                 'messages' => []
             ]);
+    }
+
+    /**
+     * @return void
+     * @test
+     */
+    public function it_has_a_type()
+    {
+        $this->assertBelongsTo('type', Type::class, Project::class);
     }
 
 }

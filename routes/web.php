@@ -111,3 +111,24 @@ $router->put('scopes/{id}', [
 $router->delete('scopes/{id}', [
     'as' => 'scope.delete', 'uses' => 'ScopeController@delete'
 ]);
+
+//Types
+$router->get('types', [
+    'as' => 'type.index', 'uses' => 'TypeController@index'
+]);
+
+$router->get('types/{id}', [
+    'as' => 'type.show', 'uses' => 'TypeController@show'
+]);
+
+$router->post('types', [
+    'as' => 'type.store', 'uses' => 'TypeController@store'
+]);
+
+$router->put('types/{id}', [
+    'as' => 'type.update', 'uses' => 'TypeController@update'
+]);
+
+$router->delete('types/{id}', [
+    'as' => 'type.delete', 'uses' => 'TypeController@delete'
+]);

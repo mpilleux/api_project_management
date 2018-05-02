@@ -26,8 +26,13 @@ class CreateProjectsTable extends Migration
             $table->integer('created_by');
             $table->integer('updated_by')->nullable();
             $table->integer('deleted_by')->nullable();
+            $table->unsignedInteger('type_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('type_id')
+                ->references('id')->on('types')
+                ->onDelete('set null');
         });
     }
 

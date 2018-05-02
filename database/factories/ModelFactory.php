@@ -79,6 +79,15 @@ $factory->define(App\Scope::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\Type::class, function (Faker\Generator $faker) {
+    return [
+        'slug' => $faker->slug,
+        'name' => $faker->name,
+        'active' => $faker->boolean(),
+        'parent_id' => null,
+    ];
+});
+
 $factory->define(App\Additional::class, function (Faker\Generator $faker) {
     return [
         'additionable_id' => $faker->randomNumber(),

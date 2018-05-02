@@ -24,7 +24,8 @@ class AppServiceProvider extends ServiceProvider
             'client' => App\Client::class,
             'contact' => App\Contact::class,
             'provider' => App\Provider::class,
-            'scope' => App\Scope::class
+            'scope' => App\Scope::class,
+            'type' => App\Type::class,
         ]);
     }
 }

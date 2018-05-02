@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Project extends Model 
+class Type extends Model 
 {
     /**
      * The attributes that are mass assignable.
@@ -22,8 +22,7 @@ class Project extends Model
         'active' => 'boolean',
         'created_by' => 'int',
         'updated_by' => 'int',
-        'deleted_by' => 'int',
-        'type_id' => 'int'
+        'deleted_by' => 'int'
     ];
 
     /**
@@ -37,8 +36,24 @@ class Project extends Model
     /**
      * @return void
      */
-    public function type()
+    public function projects()
     {
-        return $this->belongsTo('App\Type');    
+        return $this->hasMany('App\Project');    
+    }
+
+    /**
+     * @return void
+     */
+    public function parent()
+    {
+        return $this->belongsTo('App\Type', 'parent_id');
+    }
+
+    /**
+     * @return void
+     */
+    public function childs()
+    {
+        return $this->hasMany('App\Type', 'parent_id');
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-class Project extends AdditionableResource
+class Type extends AdditionableResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +17,9 @@ class Project extends AdditionableResource
             'slug' => $this->slug,
             'name' => $this->name,
             'active' => $this->active,
-            'type_id' => $this->type_id,
-            'type' => new Type($this->whenLoaded('type')),
-            'created_by' => $this->created_by,
-            'updated_by' => $this->updated_by,
-            'deleted_by' => $this->deleted_by,
+            'parent_id' => $this->type_id,
+            'parent' => new Type($this->whenLoaded('parent')),
+            'projects' => Project::collection($this->whenLoaded('projects')),
             'created_at' => $this->created_at ? $this->created_at->toDateTimeString() : null,
             'updated_at' => $this->updated_at ? $this->updated_at->toDateTimeString() : null,
             'deleted_at' => $this->deleted_at ? $this->deleted_at->toDateTimeString() : null

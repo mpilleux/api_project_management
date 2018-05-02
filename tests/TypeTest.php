@@ -2,11 +2,9 @@
 
 use Laravel\Lumen\Testing\DatabaseMigrations;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use App\Provider;
-use App\Project;
-use App\Scope;
+use App\Type;
 
-class ScopeTest extends TestCase
+class TypeTest extends TestCase
 {
     use DatabaseMigrations, ModelHelpers;
     
@@ -14,10 +12,10 @@ class ScopeTest extends TestCase
      * @return void
      * @test
      */
-    public function it_list_all_scopes()
+    public function it_list_all_types()
     {
-        $collection = factory('App\Scope', 4)->create();
-        $response = $this->get('/scopes')->seeStatusCode(200);
+        $collection = factory('App\Type', 4)->create();
+        $response = $this->get('/types')->seeStatusCode(200);
         $this->seeJson($collection->first()->toArray());
     }
 
@@ -25,10 +23,10 @@ class ScopeTest extends TestCase
      * @return void
      * @test
      */
-    public function it_shows_a_scope()
+    public function it_shows_a_type()
     {
-        $entity = factory('App\Scope')->create();
-        $route = 'scopes/' . $entity->id;
+        $entity = factory('App\Type')->create();
+        $route = 'types/' . $entity->id;
         $response = $this->get($route)->seeStatusCode(200);
         $this->seeJson($entity->toArray());        
     }
@@ -37,20 +35,20 @@ class ScopeTest extends TestCase
      * @return void
      * @test
      */
-    public function it_shows_scope_with_additional_data()
+    public function it_shows_types_with_additional_data()
     {
         Relation::morphMap([
-            'scope' => App\Scope::class
+            'type' => App\Type::class
         ]);
-        $entity = factory('App\Scope')->create();
+        $entity = factory('App\Type')->create();
         $additional = factory('App\Additional')->create([
             'additionable_id' => $entity->id,
-            'additionable_type' => 'scope',
+            'additionable_type' => 'type',
             'key' => 'duracion',
             'value_text' => null,
             'value_int' => 12 
         ]);
-        $route = 'scopes/' . $entity->id . '?with=additionals';
+        $route = 'types/' . $entity->id . '?with=additionals';
         $response = $this->get($route)->seeStatusCode(200);
         // dd($this->response->getContent());
         $this->seeJsonContains(['duracion' => 12]);
@@ -60,22 +58,18 @@ class ScopeTest extends TestCase
      * @return void
      * @test
      */
-    public function it_store_a_scope()
+    public function it_store_a_type()
     {
-        $route = '/scopes';
-        $provider = factory('App\Provider')->create();
-        $project = factory('App\Project')->create();
+        $route = '/types';
         $data = [
             'slug' => 'sssddfasd',
             'name' => 'proyectoi de de',
             'active' => 1,
-            'provider_id' => $provider->id,
-            'project_id' => $project->id,
             'color' => 'red'
         ];
         $response = $this->post($route, $data)->seeStatusCode(201);
 
-        $entity = Scope::first(); 
+        $entity = Type::first(); 
         $this->seeJson($entity->toArray());
         $this->assertEquals($entity->slug, 'sssddfasd');
         $this->assertEquals($entity->additionals()->first()->key, 'color');
@@ -86,18 +80,18 @@ class ScopeTest extends TestCase
      * @return void
      * @test
      */
-    public function it_updates_scopes()
+    public function it_updates_types()
     {
-        $entity = factory(Scope::class)->create(['name' => 'original']);
+        $entity = factory(Type::class)->create(['name' => 'original']);
         $data = [
             'name' => 'editado',
             'color' => 'blue',
             'size' => '2'
         ]; 
-        $route = 'scopes/' . $entity->id;
+        $route = 'types/' . $entity->id;
         $response = $this->put($route, $data)->seeStatusCode(200);
 
-        $edited = Scope::find($entity->id);
+        $edited = Type::find($entity->id);
         $this->seeJson($edited->toArray());
         $this->assertEquals($edited->name, 'editado');
         $this->assertEquals($entity->additionals()->first()->key, 'color');
@@ -111,10 +105,10 @@ class ScopeTest extends TestCase
      * @return void
      * @test
      */
-    public function it_deletes_scopes()
+    public function it_deletes_types()
     {
-        $entity = factory(Scope::class)->create();
-        $route = 'scopes/' . $entity->id;
+        $entity = factory(Type::class)->create();
+        $route = 'types/' . $entity->id;
         $response = $this->delete($route)
             ->seeStatusCode(200)
             ->seeJsonEquals([
@@ -123,43 +117,41 @@ class ScopeTest extends TestCase
                 'status' => 'ok',
                 'messages' => []
             ]);
-        $this->assertCount(0, Scope::all());    
+        $this->assertCount(0, Type::all());    
     }
 
     /**
      * @return void
      * @test
      */
-    public function it_belongs_to_projects()
+    public function it_belongs_to_parent_type()
     {
-        $this->assertBelongsTo('project', Project::class, Scope::class);
+        $this->assertBelongsTo('parent', Type::class, Type::class);
     }
 
     /**
      * @return void
      * @test
      */
-    public function it_belongs_to_providers()
+    public function it_has_many_childs()
     {
-        $this->assertBelongsTo('provider', Provider::class, Scope::class);
+        $this->assertHasMany('childs', Type::class, Type::class);
     }
 
     /**
      * @return void
      * @test
      */
-    public function it_loads_project()
+    public function it_loads_projects()
     {
-        $provider = factory('App\Provider')->create();
-        $project = factory('App\Project')->create();
-        $scope = factory('App\Scope')->create([
-            'provider_id' => $provider->id,
-            'project_id' => $project->id
+        $type = factory('App\Type')->create();
+        $projects = factory('App\Project', 2)->create([
+            'type_id' => $type->id,
         ]);
-        $route = 'scopes/' . $scope->id . '?with=project,provider';
+        $route = 'types/' . $type->id . '?with=projects';
         $response = $this->get($route)->seeStatusCode(200);
         // dd($this->response->getContent());
-        $this->seeJson(['slug' => $scope->project->slug]);
-        $this->seeJson(['slug' => $scope->provider->slug]);
+        $this->seeJson(['slug' => $projects->first()->slug]);
+        $this->seeJson(['slug' => $projects->last()->slug]);
     }
 }
